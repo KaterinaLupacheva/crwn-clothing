@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {createStructuredSelector } from 'reselect';
+import { createStructuredSelector } from 'reselect';
 
 import { GlobalStyle } from './global.styles';
 // import './App.css';
@@ -16,21 +16,19 @@ import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
 
-
-const App =({ setCurrentUser, currentUser }) => {
-
+const App = ({ setCurrentUser, currentUser }) => {
   useEffect(() => {
     let unsubscribeFromAuth = null;
     unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
-          const userRef = await createUserProfileDocument(userAuth);
+        const userRef = await createUserProfileDocument(userAuth);
 
-          userRef.onSnapshot(snapShot => {
-            setCurrentUser ({
-              id: snapShot.id,
-                ...snapShot.data()
-            });
+        userRef.onSnapshot(snapShot => {
+          setCurrentUser({
+            id: snapShot.id,
+            ...snapShot.data(),
           });
+        });
       }
 
       setCurrentUser(userAuth);
@@ -38,35 +36,33 @@ const App =({ setCurrentUser, currentUser }) => {
 
     return () => {
       unsubscribeFromAuth();
-    }
+    };
   }, [setCurrentUser]);
 
-    return (
-      <div>
-        {/* <GlobalStyle /> */}
-        <Header />
-        <Switch>
-          <Route exact path='/' component={HomePage} />
-          <Route path='/shop' component={ShopPage} />
-          <Route exact path='/checkout' component={CheckoutPage} />
-          <Route exact path='/signin' render={() => 
-            currentUser ? (
-            <Redirect to='/' />
-            ) : (
-            <SignInAndSignUpPage />
-          )} />
-        </Switch>
-      </div>
-    );
-  }
- 
+  return (
+    <div>
+      {/* <GlobalStyle /> */}
+      <Header />
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route path="/shop" component={ShopPage} />
+        <Route exact path="/checkout" component={CheckoutPage} />
+        <Route
+          exact
+          path="/signin"
+          render={() => (currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />)}
+        />
+      </Switch>
+    </div>
+  );
+};
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
-})
+  currentUser: selectCurrentUser,
+});
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  setCurrentUser: user => dispatch(setCurrentUser(user)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
