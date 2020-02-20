@@ -1,43 +1,46 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import React from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
-import { auth } from '../../firebase/firebase.utils';
-import CartIcon from '../cart-icon/cart-icon.component';
-import CartDropdown from '../cart-dropdown/cart-dropdown.component';
-import { selectCartHidden } from '../../redux/cart/cart.selectors';
-import { selectCurrentUser } from '../../redux/user/user.selector';
+import { auth } from "../../firebase/firebase.utils";
+import CartIcon from "../cart-icon/cart-icon.component";
+import CartDropdown from "../cart-dropdown/cart-dropdown.component";
+import { selectCartHidden } from "../../redux/cart/cart.selectors";
+import { selectCurrentUser } from "../../redux/user/user.selector";
 
-import logo from '../../assets/logo.png';
+import logo from "../../assets/logo.png";
 
-import { HeaderContainer, LogoContainer, OptionsContainer, OptionLink, LogoImage } from './header.styles';
+import {
+  HeaderContainer,
+  LogoContainer,
+  OptionsContainer,
+  OptionLink,
+  LogoImage
+} from "./header.styles";
 
 const Header = ({ currentUser, hidden }) => (
-    <HeaderContainer>
-        <LogoContainer to="/">
-            <LogoImage src={logo} alt='logo' />
-        </LogoContainer>
-        <OptionsContainer>
-            <OptionLink to="/shop">SHOP</OptionLink>
-            <OptionLink to="/contact">CONTACT</OptionLink>
-            {
-                currentUser ? 
-                <OptionLink as='div' onClick={() => auth.signOut()}>SIGN OUT</OptionLink>
-                :
-                <OptionLink to='/signin'>SIGN IN</OptionLink>
-            }
-            <CartIcon />
-        </OptionsContainer>
-        {
-            hidden ? null :
-            <CartDropdown />
-        }
-    </HeaderContainer>
-)
+  <HeaderContainer>
+    <LogoContainer to="/">
+      <LogoImage src={logo} alt="logo" />
+    </LogoContainer>
+    <OptionsContainer>
+      <OptionLink to="/shop">SHOP</OptionLink>
+      {currentUser ? (
+        <OptionLink as="div" onClick={() => auth.signOut()}>
+          SIGN OUT
+        </OptionLink>
+      ) : (
+        <OptionLink to="/signin">SIGN IN</OptionLink>
+      )}
+      <CartIcon />
+    </OptionsContainer>
+    {hidden ? null : <CartDropdown />}
+  </HeaderContainer>
+);
 
 const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser,
-    hidden: selectCartHidden
+  currentUser: selectCurrentUser,
+  hidden: selectCartHidden
 });
 
 export default connect(mapStateToProps)(Header);
