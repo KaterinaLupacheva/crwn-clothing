@@ -42,3 +42,8 @@ export const OptionLink = styled(Link)`
 padding: 10px 15px;
 cursor: pointer;
 `;
+
+export const LogoImage = styled.img`
+    max-width: 100%;
+    max-height: 100%;
+`;
